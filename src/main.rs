@@ -3,8 +3,7 @@ mod http;
 use std::io::prelude::*;
 use std::io;
 use std::net::{TcpListener, TcpStream};
-
-use crate::http::HttpResponse;
+use http::HttpResponse;
 
 /// HTTP server host address.
 const ADDR: &'static str = "127.0.0.1:1985";
