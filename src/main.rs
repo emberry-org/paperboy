@@ -1,14 +1,18 @@
 mod http;
+mod json;
 
 use std::io::prelude::*;
 use std::io;
 use std::net::{TcpListener, TcpStream};
 use http::HttpResponse;
+use json::{reload_json, CACHED_JSON};
 
 /// HTTP server host address.
 const ADDR: &'static str = "127.0.0.1:1985";
 
 fn main() {
+    reload_json().expect("failed to load update json");
+
     let listener = TcpListener::bind(ADDR).unwrap();
 
     println!("Web server is listening at {}", ADDR);
@@ -45,13 +49,15 @@ fn parse_headers(buf: &[u8; 1024]) -> Option<String> {
 fn fetch_path(path: &str) -> Option<String> {
     match path {
         "/updates" => {
-            Some("TODO: send update information".to_owned())
+            let json = CACHED_JSON.lock().expect("failed to lock json");
+            Some(json.to_owned())
         }
-        s if s.starts_with("/reload/") => {
-            if &s[8..] == "1234" {
-                Some("TODO: reload the cache".to_owned())
+        s if s.starts_with("/reload") => {
+            if s.len() > 8 && &s[8..] == "1234" {
+                reload_json().expect("failed to load update json");
+                Some("New newspapers acquired".to_owned())
             } else {
-                Some("Password incorrect!".to_owned())
+                Some("Password required".to_owned())
             }
         }
         _ => None
