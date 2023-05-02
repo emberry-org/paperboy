@@ -1,4 +1,4 @@
-# Paperboy
+# Paperboy <sup>***[Deprecated]***</sup>
 [Emberry](https://github.com/emberry-org/emberry)'s automatic updater service API.<br>
 Designed for use with [Tauri](https://tauri.app).
 
